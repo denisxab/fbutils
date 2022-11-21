@@ -1,4 +1,4 @@
-from fb_base import FB, Fetch
+from fbutils.fb_base311 import FB, Fetch
 
 con = FB.connect(
     'test_db',
