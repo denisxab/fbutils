@@ -57,4 +57,15 @@ def read_table_one():
 if __name__ == '__main__':
     # insert_into_from_table()
     read_table_one()
-    read_table_all()
+    # read_table_all()
+
+    # import zlib
+
+    # teststr = """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
+    # pretium justo eget elit eleifend, et dignissim quam eleifend. Nam vehicula nisl
+    # posuere velit volutpat, vitae scelerisque nisl imperdiet. Phasellus dignissim,
+    # dolor amet."""
+
+    # cmpstr = zlib.compress(teststr.encode('utf-8'))
+
+    # print(cmpstr)
