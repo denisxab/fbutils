@@ -16,32 +16,33 @@ def create_database():
 
 def create_table():
     fb_obj.writeOne("""
-     create table DIAGLINKS
-     (
-       DIAGLINKID int,
-       DICID int,
-       REFID int,
-       DGCODE int not null,
-       SORTORDER int,
-       UID int,
-       MODIFYDATE date,
-       FILIAL int,
-       F25_COLOR int,
-       constraint PK_DIAGLINKS primary key (DIAGLINKID)
-     );
+    create table DIAGLINKS
+    (
+        DIAGLINKID int,
+        DICID int,
+        REFID int,
+        DGCODE int not null,
+        SORTORDER int,
+        UID int,
+        MODIFYDATE date,
+        FILIAL int,
+        F25_COLOR int,
+        constraint PK_DIAGLINKS primary key (DIAGLINKID)
+    );
     """)
 
 
 def insert_into_from_table():
-    fb_obj.writeMany("insert into DIAGLINKS (DIAGLINKID,DICID,REFID,DGCODE) values (?,?,?,?)",
-                     params=[
-                         (11, 2, 3, 4),
-                         (22, 2, 3, 4),
-                         (33, 2, 3, 4),
-                         (44, 2, 3, 4),
-                         (55, 2, 3, 4),
-                     ]
-                     )
+    fb_obj.writeMany(
+        "insert into DIAGLINKS (DIAGLINKID,DICID,REFID,DGCODE) values (?,?,?,?)",
+        params=[
+            (11, 2, 3, 4),
+            (22, 2, 3, 4),
+            (33, 2, 3, 4),
+            (44, 2, 3, 4),
+            (55, 2, 3, 4),
+        ]
+    )
 
 
 def read_table_all():
@@ -60,12 +61,9 @@ if __name__ == '__main__':
     # read_table_all()
 
     # import zlib
-
     # teststr = """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
     # pretium justo eget elit eleifend, et dignissim quam eleifend. Nam vehicula nisl
     # posuere velit volutpat, vitae scelerisque nisl imperdiet. Phasellus dignissim,
     # dolor amet."""
-
     # cmpstr = zlib.compress(teststr.encode('utf-8'))
-
     # print(cmpstr)
