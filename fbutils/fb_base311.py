@@ -1,4 +1,6 @@
 from collections import namedtuple
+import re
+import string
 from typing import Any, Callable, Iterator
 
 from firebird.driver import Connection, Cursor, DBKeyScope, connect
@@ -38,7 +40,13 @@ class Fetch:
         @staticmethod
         def namedtuplefetch(cur: Cursor, row: tuple[Any, ...]) -> list[namedtuple]:
             nt_result = namedtuple(
-                '_', [col[0] for col in cur.description])
+                '_', [
+                    # Убираем спец символы из названия столбцов,
+                    # чтобы они были допустимы для использования в качестве переменной
+                    col[0].translate(str.maketrans('', '', string.punctuation))
+                    for col in cur.description
+                ]
+            )
             return nt_result(*row)
 
         @staticmethod
@@ -72,7 +80,9 @@ class _AutoCommit:
 
 
 class FB:
-    def __init__(self, connect: Connection, *, func_fetchAll: Fetch.All = Fetch.All.fetchall, func_fetchOne: Fetch.One = lambda c, r: r):
+    def __init__(
+        self, connect: Connection, *, func_fetchOne: Fetch.One = lambda c, r: r, func_fetchAll: Fetch.All = Fetch.All.fetchall
+    ):
         self.connect: Connection = connect
         self.func_fetchAll: Callable[[Cursor], Any] = func_fetchAll
         self.func_fetchOne: Callable[
@@ -80,13 +90,14 @@ class FB:
         # Если нет ошибок то, подключение успешно
         print(self.connect)
 
+    @staticmethod
     def connect(database: str, *, user: str = None, password: str = None, role: str = None,
                 no_gc: bool = None, no_db_triggers: bool = None, dbkey_scope: DBKeyScope = None,
                 crypt_callback: iCryptKeyCallbackImpl = None, charset: str = None,
                 auth_plugin_list: str = None, session_time_zone: str = None) -> Connection:
         """
         Подключиться к БД
-        
+
         :params database: URL к БД
         :params user: Имя пользователя
         :params password: Пароль пользователя
@@ -110,7 +121,7 @@ class FB:
         with self.connect.cursor() as cur:
             cur: Cursor
             with _AutoCommit(self.connect):
-                cur.execute(sql,params)
+                cur.execute(sql, params)
 
     def writeMany(self, sql: str, *, params: list[tuple[Any, ...]] = None) -> bool:
         """

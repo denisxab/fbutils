@@ -1,16 +1,23 @@
-Драйвер для работы с `Firebird`
+# Драйвер для работы с `Firebird`
+
+**Пример использования**
 
 ```python
 from fbutils.fb_base311 import FB, Fetch
 
 con = FB.connect(
-    'test_db',
+    'localhost:Алиас',
     user='sysdba',
-    password='denis123',
+    password='masterkey',
 )
 
-fb_obj = FB(con, func_fetchAll=Fetch.All.dictfetch,
-            func_fetchOne=Fetch.One.namedtuplefetch)
+fb = FB(
+    con
+    # Тип получения ответа для одной записи
+    , func_fetchOne=Fetch.One.namedtuplefetch
+    # Тип получения ответа для нескольких записи
+    , func_fetchAll=Fetch.All.dictfetch
+)
 
 
 def create_database():
@@ -18,7 +25,7 @@ def create_database():
 
 
 def create_table():
-    fb_obj.writeOne("""
+    fb.writeOne("""
     create table DIAGLINKS
     (
         DIAGLINKID int,
@@ -36,7 +43,7 @@ def create_table():
 
 
 def insert_into_from_table():
-    fb_obj.writeMany(
+    fb.writeMany(
         "insert into DIAGLINKS (DIAGLINKID,DICID,REFID,DGCODE) values (?,?,?,?)",
         params=[
             (11, 2, 3, 4),
@@ -49,12 +56,12 @@ def insert_into_from_table():
 
 
 def read_table_all():
-    res = fb_obj.readAll("select * from DIAGLINKS")
+    res = fb.readAll("select * from DIAGLINKS")
     print(res)
 
 
 def read_table_one():
-    for x in fb_obj.readRow("select * from DIAGLINKS"):
+    for x in fb.readRow("select * from DIAGLINKS"):
         print(x)
 
 if __name__ == '__main__':
